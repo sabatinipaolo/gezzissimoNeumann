@@ -15,7 +15,9 @@ char control_bus = ' ';
 
 void mostra_stato()
 {
-    system("clear");
+    system("clear"); //per linux 
+    // system("cls"); //per windows 
+     
     cout << endl;
     cout << " +------------- CPU -------------+                             +----RAM-----+" << endl;
     cout << " |     +--------------+          |  /|                     |\\  |     " << setw(2) << ram[0] << "     |   O" << endl;
