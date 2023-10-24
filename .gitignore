@@ -2,3 +2,7 @@ main
 main.exe
 .vscode/settings.json
 .vscode/tasks.json
+
+esercizi_Utili/perCapireLaStampaStato/010_cornice_vuota
+esercizi_Utili/perCapireLaStampaStato/020_cornice_numero
+esercizi_Utili/perCapireLaStampaStato/030_cornice_numero_setw
