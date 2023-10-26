@@ -12,6 +12,7 @@
 **050_cornice_esercizio_tabellina_di_n.cpp :** esercizi da fare come specificato nei commenti iniziali \
 \
 \
+### operatore ternario _condizione ? valore_vero : valore_falso_  ###
 **100_operatore_ternario.cpp :** spiega cosa è l'operatore  ternarrio, satmpa se un numero è pari o dispari ..
 \
 \
