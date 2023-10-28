@@ -34,7 +34,7 @@ void mostra_stato()
     cout << " |     +--------------+          |  /|                     |\\  |     " << setw(2) << sistema.ram[0] << "     |   O" << endl;
     cout << " |  A= |      " << setw(2) << sistema.a << "      |          | / +----DATA BUS --------+ \\ +------------+" << endl;
     cout << " |     +--------------+          |/                           \\|     " << setw(2) << sistema.ram[1] << "     |   1" << endl;
-    cout << " |                               |\\               " << setw(2) << sistema.data_bus << "          /+------------+" << endl;
+    cout << " |                               |\\               " << setw(2) << (sistema.data_bus < 0 ? "" : to_string(sistema.data_bus)) << "          /+------------+" << endl;
     cout << " |     +--------------+          | \\ +---------------------+ / |     " << setw(2) << sistema.ram[2] << "     |   2" << endl;
     cout << " |  B= |      " << setw(2) << sistema.b << "      |          |  \\|                     |/  +------------+" << endl;
     cout << " |     +--------------+          |                             |     " << setw(2) << sistema.ram[3] << "     |   3" << endl;
@@ -42,7 +42,7 @@ void mostra_stato()
     cout << " |     +--------------+          |                         |\\  |     " << setw(2) << sistema.ram[4] << "     |   4" << endl;
     cout << " | IR= |      " << setw(2) << sistema.ir << "      |          |---- ADDRESS BUS --------+ \\ +------------+" << endl;
     cout << " |     +--------------+          |                            \\|     " << setw(2) << sistema.ram[5] << "     |   5" << endl;
-    cout << " |                               |            " << setw(2) << sistema.address_bus << "               /+------------+" << endl;
+    cout << " |                               |            " << setw(2) << (sistema.address_bus < 0 ? "" : to_string(sistema.address_bus)) << "               /+------------+" << endl;
     cout << " |                               |-------------------------+ / |     " << setw(2) << sistema.ram[6] << "     |   6" << endl;
     cout << " |                               |                         |/  +------------+" << endl;
     cout << " |        +--------------+       |                             |     " << setw(2) << sistema.ram[7] << "     |   7" << endl;
