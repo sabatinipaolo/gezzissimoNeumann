@@ -77,11 +77,20 @@ void inizializza_set_istruzioni()
                               sistema.a++;
                           }};
     set_istruzioni[12] = {12, "\t DEC A \n \n \t\tDecrementa il valore contenunto nel registro A", []()
-                          { cout << "exe di 12"; }};
+                          {
+                              cout << "=>  A - 1 --> A " << endl;
+                              sistema.a++;
+                          }};
     set_istruzioni[13] = {13, "\t INC B \n \n \t\tIncrementa il valore contenunto nel registro B", []()
-                          { cout << "exe di 13"; }};
+                          {
+                              cout << "=>  B + 1 --> A " << endl;
+                              sistema.a++;
+                          }};
     set_istruzioni[14] = {14, "\t DEC B \n \n \t\tDecrementa il valore contenunto nel registro B", []()
-                          { cout << "exe di 14"; }};
+                          {
+                              cout << "=>  B - 1 --> B " << endl;
+                              sistema.a++;
+                          }};
     set_istruzioni[27] = {27, "\t ADD A , dato \n \n \t\t Addiziona ad A il valore in memoria che segue immediatamente  l'istruzione", []()
                           { cout << "exe di 27"; }};
     set_istruzioni[28] = {28, "\t ADD B , dato \n \n \t\t Addiziona a B il valore in memoria che segue immediatamente  l'istruzione", []()
