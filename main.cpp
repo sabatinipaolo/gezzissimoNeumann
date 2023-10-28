@@ -1,5 +1,6 @@
 #include <iostream>
 #include <iomanip>
+#include <map>
 using namespace std;
 
 struct Sistema
@@ -26,10 +27,24 @@ struct Istruzione
     // todo funzione execute
 };
 
-void
-mostra_stato()
+map<int, Istruzione> set_istruzioni;
+void inizializza_set_istruzioni()
 {
+    set_istruzioni[0] = {0, "\t HLT \n \n \t\tFerma il sistema"};
 
+    set_istruzioni[11] = {11, "\t INC A \n \n \t\tIncrementa il valore contenunto nel registro A"};
+    set_istruzioni[12] = {12, "\t DEC A \n \n \t\tDecrementa il valore contenunto nel registro A"};
+    set_istruzioni[13] = {13, "\t INC B \n \n \t\tIncrementa il valore contenunto nel registro B"};
+    set_istruzioni[14] = {14, "\t DEC B \n \n \t\tDecrementa il valore contenunto nel registro B"};
+    set_istruzioni[27] = {27, "\t ADD A , dato \n \n \t\t Addiziona ad A il valore in memoria che segue immediatamente  l'istruzione"};
+    set_istruzioni[28] = {28, "\t ADD B , dato \n \n \t\t Addiziona a B il valore in memoria che segue immediatamente  l'istruzione"};
+
+    set_istruzioni[23] = {23, "\t MOV A , dato \n \n \t\t Copia in A il valore in memoria che segue immediatamente  l'istruzione"};
+    set_istruzioni[24] = {24, "\t MOV B , dato \n \n \t\t Copia in B il valore in memoria che segue immediatamente  l'istruzione"};
+}
+void mostra_stato()
+{
+    system("clear");
     cout << " +------------- CPU -------------+                             +----RAM-----+" << endl;
     cout << " |     +--------------+          |  /|                     |\\  |     " << setw(2) << sistema.ram[0] << "     |   O" << endl;
     cout << " |  A= |      " << setw(2) << sistema.a << "      |          | / +----DATA BUS --------+ \\ +------------+" << endl;
@@ -56,7 +71,100 @@ mostra_stato()
          << endl;
 }
 
+void premi()
+{
+    string s;
+    cout << endl
+         << endl
+         << " premi invio per il prossimo ciclo di clock";
+    cin.get();
+}
+
 int main()
 {
-    mostra_stato();
+    inizializza_set_istruzioni();
+    
+    while (true)
+    {
+        { // FETCH
+            sistema.fase="FETCH";
+            mostra_stato();
+            cout << "=> IP/PC  --> ADDRESS BUS" << endl;
+            cout << "   \"R\" ---> CONTROL BUS" << endl;
+            cout << "   RAM[ADDRESS BUS] --> DATA BUS" << endl;
+            cout << "   DATA BUS --> IR" << endl;
+            cout << "   IP/PC +1 --> IP/PC" << endl;
+            premi();
+
+            sistema.address_bus = sistema.ip;
+            mostra_stato();
+
+            cout << "   IP/PC  --> ADDRESS BUS" << endl;
+            cout << "=> \"R\" ---> CONTROL BUS" << endl;
+            cout << "   RAM[ADDRESS BUS] --> DATA BUS" << endl;
+            cout << "   DATA BUS --> IR" << endl;
+            cout << "   IP/PC +1 --> IP/PC" << endl;
+            premi();
+
+            sistema.control_bus = 'R';
+            mostra_stato();
+
+            cout << "   IP/PC  --> ADDRESS BUS" << endl;
+            cout << "   \"R\" ---> CONTROL BUS" << endl;
+            cout << "=> RAM[ADDRESS BUS] --> DATA BUS" << endl;
+            cout << "   DATA BUS --> IR" << endl;
+            cout << "   IP/PC +1 --> IP/PC" << endl;
+            premi();
+
+            sistema.data_bus = sistema.ram[sistema.address_bus];
+            mostra_stato();
+
+            cout << "   IP/PC  --> ADDRESS BUS" << endl;
+            cout << "   \"R\" ---> CONTROL BUS" << endl;
+            cout << "   RAM[ADDRESS BUS] --> DATA BUS" << endl;
+            cout << "=> DATA BUS --> IR" << endl;
+            cout << "   IP/PC +1 --> IP/PC" << endl;
+            premi();
+
+            sistema.ir = sistema.data_bus;
+            sistema.address_bus = -1;
+            sistema.data_bus = -1;
+            sistema.control_bus = ' ';
+
+            mostra_stato();
+
+            cout << "   IP/PC  --> ADDRESS BUS" << endl;
+            cout << "   \"R\" ---> CONTROL BUS" << endl;
+            cout << "   RAM[ADDRESS BUS] --> DATA BUS" << endl;
+            cout << "   DATA BUS --> IR" << endl;
+            cout << "=> IP/PC +1 --> IP/PC" << endl;
+            premi();
+
+            sistema.ip++;
+
+            mostra_stato();
+        } // fine FETCH
+        { // DECODE
+            sistema.fase ="DECODE";
+            mostra_stato();
+            cout << endl
+                 << "codice operativo  " << sistema.ir << endl
+                 << endl;
+
+            if (set_istruzioni.find(sistema.ir) == set_istruzioni.end()) // TODO c++20 m.contains( k )
+            {
+                cout << "op_code non valido" << endl
+                     << endl;
+                premi();
+                continue;
+            }
+            else
+            {
+                cout << set_istruzioni[sistema.ir].decodifica << endl
+                     << endl
+                     << endl;
+                premi();
+            }
+        }
+    }
 }
