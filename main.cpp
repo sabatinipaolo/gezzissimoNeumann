@@ -1,6 +1,7 @@
 #include <iostream>
 #include <iomanip>
 #include <map>
+#include <functional>
 using namespace std;
 
 struct Sistema
@@ -21,26 +22,34 @@ struct Sistema
 
 struct Istruzione
 {
-    int op_code;
+    int op_code; // TODO is ridondante ?
     string decodifica;
-
-    // todo funzione execute
+    std::function<void()> esecuzione;
 };
 
 map<int, Istruzione> set_istruzioni;
 void inizializza_set_istruzioni()
 {
-    set_istruzioni[0] = {0, "\t HLT \n \n \t\tFerma il sistema"};
+    set_istruzioni[0] = {0, "\t HLT \n \n \t\tFerma il sistema", []()
+                         { cout << "exe di 0"; }};
 
-    set_istruzioni[11] = {11, "\t INC A \n \n \t\tIncrementa il valore contenunto nel registro A"};
-    set_istruzioni[12] = {12, "\t DEC A \n \n \t\tDecrementa il valore contenunto nel registro A"};
-    set_istruzioni[13] = {13, "\t INC B \n \n \t\tIncrementa il valore contenunto nel registro B"};
-    set_istruzioni[14] = {14, "\t DEC B \n \n \t\tDecrementa il valore contenunto nel registro B"};
-    set_istruzioni[27] = {27, "\t ADD A , dato \n \n \t\t Addiziona ad A il valore in memoria che segue immediatamente  l'istruzione"};
-    set_istruzioni[28] = {28, "\t ADD B , dato \n \n \t\t Addiziona a B il valore in memoria che segue immediatamente  l'istruzione"};
+    set_istruzioni[11] = {11, "\t INC A \n \n \t\tIncrementa il valore contenunto nel registro A", []()
+                          { cout << "exe di 11"; }};
+    set_istruzioni[12] = {12, "\t DEC A \n \n \t\tDecrementa il valore contenunto nel registro A", []()
+                          { cout << "exe di 12"; }};
+    set_istruzioni[13] = {13, "\t INC B \n \n \t\tIncrementa il valore contenunto nel registro B", []()
+                          { cout << "exe di 13"; }};
+    set_istruzioni[14] = {14, "\t DEC B \n \n \t\tDecrementa il valore contenunto nel registro B", []()
+                          { cout << "exe di 14"; }};
+    set_istruzioni[27] = {27, "\t ADD A , dato \n \n \t\t Addiziona ad A il valore in memoria che segue immediatamente  l'istruzione", []()
+                          { cout << "exe di 27"; }};
+    set_istruzioni[28] = {28, "\t ADD B , dato \n \n \t\t Addiziona a B il valore in memoria che segue immediatamente  l'istruzione", []()
+                          { cout << "exe di 28"; }};
 
-    set_istruzioni[23] = {23, "\t MOV A , dato \n \n \t\t Copia in A il valore in memoria che segue immediatamente  l'istruzione"};
-    set_istruzioni[24] = {24, "\t MOV B , dato \n \n \t\t Copia in B il valore in memoria che segue immediatamente  l'istruzione"};
+    set_istruzioni[23] = {23, "\t MOV A , dato \n \n \t\t Copia in A il valore in memoria che segue immediatamente  l'istruzione", []()
+                          { cout << "exe di 23"; }};
+    set_istruzioni[24] = {24, "\t MOV B , dato \n \n \t\t Copia in B il valore in memoria che segue immediatamente  l'istruzione", []()
+                          { cout << "exe di 24"; }};
 }
 void mostra_stato()
 {
@@ -83,11 +92,11 @@ void premi()
 int main()
 {
     inizializza_set_istruzioni();
-    
+
     while (true)
     {
         { // FETCH
-            sistema.fase="FETCH";
+            sistema.fase = "FETCH";
             mostra_stato();
             cout << "=> IP/PC  --> ADDRESS BUS" << endl;
             cout << "   \"R\" ---> CONTROL BUS" << endl;
@@ -145,7 +154,7 @@ int main()
             mostra_stato();
         } // fine FETCH
         { // DECODE
-            sistema.fase ="DECODE";
+            sistema.fase = "DECODE";
             mostra_stato();
             cout << endl
                  << "codice operativo  " << sistema.ir << endl
@@ -165,6 +174,15 @@ int main()
                      << endl;
                 premi();
             }
+        }
+        { // EXECUTE
+          // TODO assert(set_istruzioni.find(sistema.ir) != set_istruzioni.end()) come si usa?
+            sistema.fase = "EXECUTE";
+            mostra_stato();
+            set_istruzioni[sistema.ir].esecuzione();
+            cout << endl
+                 << endl;
+            premi();
         }
     }
 }
