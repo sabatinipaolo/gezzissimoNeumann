@@ -27,30 +27,6 @@ struct Istruzione
     std::function<void()> esecuzione;
 };
 
-map<int, Istruzione> set_istruzioni;
-void inizializza_set_istruzioni()
-{
-    set_istruzioni[0] = {0, "\t HLT \n \n \t\tFerma il sistema", []()
-                         { cout << "exe di 0"; }};
-
-    set_istruzioni[11] = {11, "\t INC A \n \n \t\tIncrementa il valore contenunto nel registro A", []()
-                          { cout << "exe di 11"; }};
-    set_istruzioni[12] = {12, "\t DEC A \n \n \t\tDecrementa il valore contenunto nel registro A", []()
-                          { cout << "exe di 12"; }};
-    set_istruzioni[13] = {13, "\t INC B \n \n \t\tIncrementa il valore contenunto nel registro B", []()
-                          { cout << "exe di 13"; }};
-    set_istruzioni[14] = {14, "\t DEC B \n \n \t\tDecrementa il valore contenunto nel registro B", []()
-                          { cout << "exe di 14"; }};
-    set_istruzioni[27] = {27, "\t ADD A , dato \n \n \t\t Addiziona ad A il valore in memoria che segue immediatamente  l'istruzione", []()
-                          { cout << "exe di 27"; }};
-    set_istruzioni[28] = {28, "\t ADD B , dato \n \n \t\t Addiziona a B il valore in memoria che segue immediatamente  l'istruzione", []()
-                          { cout << "exe di 28"; }};
-
-    set_istruzioni[23] = {23, "\t MOV A , dato \n \n \t\t Copia in A il valore in memoria che segue immediatamente  l'istruzione", []()
-                          { cout << "exe di 23"; }};
-    set_istruzioni[24] = {24, "\t MOV B , dato \n \n \t\t Copia in B il valore in memoria che segue immediatamente  l'istruzione", []()
-                          { cout << "exe di 24"; }};
-}
 void mostra_stato()
 {
     system("clear");
@@ -87,6 +63,34 @@ void premi()
          << endl
          << " premi invio per il prossimo ciclo di clock";
     cin.get();
+}
+
+map<int, Istruzione> set_istruzioni;
+void inizializza_set_istruzioni()
+{
+    set_istruzioni[0] = {0, "\t HLT \n \n \t\tFerma il sistema", []()
+                         { cout << "exe di 0"; }};
+
+    set_istruzioni[11] = {11, "\t INC A \n \n \t\tIncrementa il valore contenunto nel registro A", []()
+                          {
+                              cout << "=>  A + 1 --> A " << endl;
+                              sistema.a++;
+                          }};
+    set_istruzioni[12] = {12, "\t DEC A \n \n \t\tDecrementa il valore contenunto nel registro A", []()
+                          { cout << "exe di 12"; }};
+    set_istruzioni[13] = {13, "\t INC B \n \n \t\tIncrementa il valore contenunto nel registro B", []()
+                          { cout << "exe di 13"; }};
+    set_istruzioni[14] = {14, "\t DEC B \n \n \t\tDecrementa il valore contenunto nel registro B", []()
+                          { cout << "exe di 14"; }};
+    set_istruzioni[27] = {27, "\t ADD A , dato \n \n \t\t Addiziona ad A il valore in memoria che segue immediatamente  l'istruzione", []()
+                          { cout << "exe di 27"; }};
+    set_istruzioni[28] = {28, "\t ADD B , dato \n \n \t\t Addiziona a B il valore in memoria che segue immediatamente  l'istruzione", []()
+                          { cout << "exe di 28"; }};
+
+    set_istruzioni[23] = {23, "\t MOV A , dato \n \n \t\t Copia in A il valore in memoria che segue immediatamente  l'istruzione", []()
+                          { cout << "exe di 23"; }};
+    set_istruzioni[24] = {24, "\t MOV B , dato \n \n \t\t Copia in B il valore in memoria che segue immediatamente  l'istruzione", []()
+                          { cout << "exe di 24"; }};
 }
 
 int main()
