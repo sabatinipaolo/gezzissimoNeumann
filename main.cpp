@@ -18,7 +18,16 @@ struct Sistema
 
 } sistema;
 
-void mostra_stato()
+struct Istruzione
+{
+    int op_code;
+    string decodifica;
+
+    // todo funzione execute
+};
+
+void
+mostra_stato()
 {
 
     cout << " +------------- CPU -------------+                             +----RAM-----+" << endl;
