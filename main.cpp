@@ -71,6 +71,51 @@ void premi()
     cin.get();
 }
 
+void lettura_da_memoria(Registro sorgente, Registro &destinazione)
+{
+
+    cout << "=> " << sorgente.nome << " --> ADDRESS BUS" << endl;
+    cout << "   \"R\" ---> CONTROL BUS" << endl;
+    cout << "   RAM[ADDRESS BUS] --> DATA BUS" << endl;
+    cout << "   DATA BUS --> " << destinazione.nome << endl;
+    premi();
+
+    sistema.address_bus = sorgente.val;
+    mostra_stato();
+
+    cout << "   " << sorgente.nome << " --> ADDRESS BUS" << endl;
+    cout << "=> \"R\" ---> CONTROL BUS" << endl;
+    cout << "   RAM[ADDRESS BUS] --> DATA BUS" << endl;
+    cout << "   DATA BUS --> " << destinazione.nome << endl;
+    premi();
+
+    sistema.control_bus = 'R';
+    mostra_stato();
+
+    cout << "   " << sorgente.nome << " --> ADDRESS BUS" << endl;
+    cout << "   \"R\" ---> CONTROL BUS" << endl;
+    cout << "=> RAM[ADDRESS BUS] --> DATA BUS" << endl;
+    cout << "   DATA BUS --> " << destinazione.nome << endl;
+    premi();
+
+    sistema.data_bus = sistema.ram[sistema.address_bus];
+    mostra_stato();
+
+    cout << "   " << sorgente.nome << " --> ADDRESS BUS" << endl;
+    cout << "   \"R\" ---> CONTROL BUS" << endl;
+    cout << "   RAM[ADDRESS BUS] --> DATA BUS" << endl;
+    cout << "=> DATA BUS --> " << destinazione.nome << endl;
+    premi();
+
+    sistema.ir.val = sistema.data_bus;
+
+    sistema.address_bus = -1;
+    sistema.data_bus = -1;
+    sistema.control_bus = ' ';
+
+    mostra_stato();
+}
+
 map<int, Istruzione> set_istruzioni;
 void inizializza_set_istruzioni()
 {
@@ -117,54 +162,10 @@ int main()
         { // FETCH
             sistema.fase = "FETCH";
             mostra_stato();
-            cout << "=> IP/PC  --> ADDRESS BUS" << endl;
-            cout << "   \"R\" ---> CONTROL BUS" << endl;
-            cout << "   RAM[ADDRESS BUS] --> DATA BUS" << endl;
-            cout << "   DATA BUS --> IR" << endl;
-            cout << "   IP/PC +1 --> IP/PC" << endl;
-            premi();
 
-            sistema.address_bus = sistema.ip.val;
+            lettura_da_memoria(sistema.ip, sistema.ir);
             mostra_stato();
 
-            cout << "   IP/PC  --> ADDRESS BUS" << endl;
-            cout << "=> \"R\" ---> CONTROL BUS" << endl;
-            cout << "   RAM[ADDRESS BUS] --> DATA BUS" << endl;
-            cout << "   DATA BUS --> IR" << endl;
-            cout << "   IP/PC +1 --> IP/PC" << endl;
-            premi();
-
-            sistema.control_bus = 'R';
-            mostra_stato();
-
-            cout << "   IP/PC  --> ADDRESS BUS" << endl;
-            cout << "   \"R\" ---> CONTROL BUS" << endl;
-            cout << "=> RAM[ADDRESS BUS] --> DATA BUS" << endl;
-            cout << "   DATA BUS --> IR" << endl;
-            cout << "   IP/PC +1 --> IP/PC" << endl;
-            premi();
-
-            sistema.data_bus = sistema.ram[sistema.address_bus];
-            mostra_stato();
-
-            cout << "   IP/PC  --> ADDRESS BUS" << endl;
-            cout << "   \"R\" ---> CONTROL BUS" << endl;
-            cout << "   RAM[ADDRESS BUS] --> DATA BUS" << endl;
-            cout << "=> DATA BUS --> IR" << endl;
-            cout << "   IP/PC +1 --> IP/PC" << endl;
-            premi();
-
-            sistema.ir.val = sistema.data_bus;
-            sistema.address_bus = -1;
-            sistema.data_bus = -1;
-            sistema.control_bus = ' ';
-
-            mostra_stato();
-
-            cout << "   IP/PC  --> ADDRESS BUS" << endl;
-            cout << "   \"R\" ---> CONTROL BUS" << endl;
-            cout << "   RAM[ADDRESS BUS] --> DATA BUS" << endl;
-            cout << "   DATA BUS --> IR" << endl;
             cout << "=> IP/PC +1 --> IP/PC" << endl;
             premi();
 
