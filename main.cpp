@@ -12,7 +12,7 @@ struct Registro
 
 struct Sistema
 {
-    int ram[9] = {23, 4, 24, 3, 27, 2, 28, 3, 0};
+    int ram[9] = {23, 4, 0, 3, 27, 2, 28, 3, 0};
     Registro a{0, "A"};
     Registro b{0, "B"};
 
@@ -26,6 +26,7 @@ struct Sistema
     int data_bus = -1;
     char control_bus = ' ';
     string fase = "FETCH";
+    string stato = "RUNNING";
 
 } sistema;
 
@@ -115,7 +116,7 @@ void lettura_da_memoria(Registro sorgente)
     sistema.address_bus = -1;
     sistema.data_bus = -1;
     sistema.control_bus = ' ';
-    
+
     mostra_stato();
 }
 
@@ -123,7 +124,10 @@ map<int, Istruzione> set_istruzioni;
 void inizializza_set_istruzioni()
 {
     set_istruzioni[0] = {0, "\t HLT \n \n \t\tFerma il sistema", []()
-                         { cout << "exe di 0"; }};
+                         {
+                             cout << "fermo l'esecuzione" << endl;
+                             sistema.stato = "HALTED";
+                         }};
 
     set_istruzioni[11] = {11, "\t INC A \n \n \t\tIncrementa il valore contenunto nel registro A", []()
                           {
@@ -201,7 +205,7 @@ int main()
 {
     inizializza_set_istruzioni();
 
-    while (true)
+    while (sistema.stato == "RUNNING")
     {
         { // FETCH
             sistema.fase = "FETCH";
