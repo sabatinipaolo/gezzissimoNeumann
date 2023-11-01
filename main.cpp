@@ -12,9 +12,12 @@ struct Registro
 
 struct Sistema
 {
-    int ram[9] = {11, 11, 12, 27, 3, 27, 11, 0, 0};
+    int ram[9] = {23, 4, 24, 3, 27, 2, 28, 3, 0};
     Registro a{0, "A"};
     Registro b{0, "B"};
+
+    Registro mr{0, "MR"};
+    Registro dr{0, "DR"};
 
     Registro ir{0, "IR"};
     Registro ip{0, "IP/PC"};
@@ -36,26 +39,26 @@ struct Istruzione
 void mostra_stato()
 {
     system("clear");
-    cout << " +------------- CPU -------------+                             +----RAM-----+" << endl;
-    cout << " |     +--------------+          |  /|                     |\\  |     " << setw(2) << sistema.ram[0] << "     |   O" << endl;
-    cout << " |  A= |      " << setw(2) << sistema.a.val << "      |          | / +----DATA BUS --------+ \\ +------------+" << endl;
-    cout << " |     +--------------+          |/                           \\|     " << setw(2) << sistema.ram[1] << "     |   1" << endl;
-    cout << " |                               |\\               " << setw(2) << (sistema.data_bus < 0 ? "" : to_string(sistema.data_bus)) << "          /+------------+" << endl;
-    cout << " |     +--------------+          | \\ +---------------------+ / |     " << setw(2) << sistema.ram[2] << "     |   2" << endl;
-    cout << " |  B= |      " << setw(2) << sistema.b.val << "      |          |  \\|                     |/  +------------+" << endl;
-    cout << " |     +--------------+          |                             |     " << setw(2) << sistema.ram[3] << "     |   3" << endl;
-    cout << " |                               |                             +------------+" << endl;
-    cout << " |     +--------------+          |                         |\\  |     " << setw(2) << sistema.ram[4] << "     |   4" << endl;
-    cout << " | IR= |      " << setw(2) << sistema.ir.val << "      |          |---- ADDRESS BUS --------+ \\ +------------+" << endl;
-    cout << " |     +--------------+          |                            \\|     " << setw(2) << sistema.ram[5] << "     |   5" << endl;
-    cout << " |                               |            " << setw(2) << (sistema.address_bus < 0 ? "" : to_string(sistema.address_bus)) << "               /+------------+" << endl;
-    cout << " |                               |-------------------------+ / |     " << setw(2) << sistema.ram[6] << "     |   6" << endl;
-    cout << " |                               |                         |/  +------------+" << endl;
-    cout << " |        +--------------+       |                             |     " << setw(2) << sistema.ram[7] << "     |   7" << endl;
-    cout << " | IP/PC= |      " << setw(2) << sistema.ip.val << "      |       |---CONTROL BUS-----------\\   +------------+" << endl;
-    cout << " |        +--------------+       |            " << sistema.control_bus << "             >  |     " << setw(2) << sistema.ram[8] << "     |   8" << endl;
-    cout << " |                               |-------------------------/   +------------+" << endl;
-    cout << " +-------------------------------+" << endl
+    cout << " +---------- CPU -----------------------+                             +----RAM-----+" << endl;
+    cout << " |  +- A ----+                          |  /|                     |\\  |     " << setw(2) << sistema.ram[0] << "     |   O" << endl;
+    cout << " |  |    " << setw(2) << sistema.a.val << "  |                 +- DR ---+ / +----DATA BUS --------+ \\ +------------+" << endl;
+    cout << " |  +--------+                 |    " << setw(2) << sistema.dr.val << "  |/                           \\|     " << setw(2) << sistema.ram[1] << "     |   1" << endl;
+    cout << " |                             +--------+\\               " << setw(2) << (sistema.data_bus < 0 ? "" : to_string(sistema.data_bus)) << "          /+------------+" << endl;
+    cout << " |  +- B ----+                          | \\ +---------------------+ / |     " << setw(2) << sistema.ram[2] << "     |   2" << endl;
+    cout << " |  |    " << setw(2) << sistema.b.val << "  |                          |  \\|                     |/  +------------+" << endl;
+    cout << " |  +--------+                          |                             |     " << setw(2) << sistema.ram[3] << "     |   3" << endl;
+    cout << " |                                      |                             +------------+" << endl;
+    cout << " |  +- IR ---+                          |                         |\\  |     " << setw(2) << sistema.ram[4] << "     |   4" << endl;
+    cout << " |  |    " << setw(2) << sistema.ir.val << "  |                 +- AR ---+---- ADDRESS BUS --------+ \\ +------------+" << endl;
+    cout << " |  +--------+                 |    " << setw(2) << sistema.mr.val << "  |                            \\|     " << setw(2) << sistema.ram[5] << "     |   5" << endl;
+    cout << " |                             +--------+            " << setw(2) << (sistema.address_bus < 0 ? "" : to_string(sistema.address_bus)) << "              /+------------+" << endl;
+    cout << " |                                      |-------------------------+ / |     " << setw(2) << sistema.ram[6] << "     |   6" << endl;
+    cout << " |                                      |                         |/  +------------+" << endl;
+    cout << " |  +-IP/PC -+                          |                             |     " << setw(2) << sistema.ram[7] << "     |   7" << endl;
+    cout << " |  |    " << setw(2) << sistema.ip.val << "  |                          |---CONTROL BUS------------\\  +------------+" << endl;
+    cout << " |  +--------+                          |            " << sistema.control_bus << "              > |     " << setw(2) << sistema.ram[8] << "     |   8" << endl;
+    cout << " |                                      |--------------------------/  +------------+" << endl;
+    cout << " +--------------------------------------+" << endl
          << endl
          << endl;
     cout << sistema.fase << endl
@@ -71,48 +74,48 @@ void premi()
     cin.get();
 }
 
-void lettura_da_memoria(Registro sorgente, Registro &destinazione)
+void lettura_da_memoria(Registro sorgente)
 {
-
-    cout << "=> " << sorgente.nome << " --> ADDRESS BUS" << endl;
-    cout << "   \"R\" ---> CONTROL BUS" << endl;
+    cout << "=> " << sorgente.nome << " ---> AR" << endl;
+    cout << "   AR ---> ADDRESS BUS   , \"R\" ---> CONTROL BUS" << endl;
     cout << "   RAM[ADDRESS BUS] --> DATA BUS" << endl;
-    cout << "   DATA BUS --> " << destinazione.nome << endl;
+    cout << "   DATA BUS --> DATA REGISTER " << endl;
     premi();
 
-    sistema.address_bus = sorgente.val;
+    sistema.mr.val = sorgente.val;
     mostra_stato();
 
-    cout << "   " << sorgente.nome << " --> ADDRESS BUS" << endl;
-    cout << "=> \"R\" ---> CONTROL BUS" << endl;
+    cout << "   " << sorgente.nome << " ---> AR" << endl;
+    cout << "=> AR ---> ADDRESS BUS   , \"R\" ---> CONTROL BUS" << endl;
     cout << "   RAM[ADDRESS BUS] --> DATA BUS" << endl;
-    cout << "   DATA BUS --> " << destinazione.nome << endl;
+    cout << "   DATA BUS --> DATA REGISTER " << endl;
     premi();
 
+    sistema.address_bus = sistema.mr.val;
     sistema.control_bus = 'R';
     mostra_stato();
 
-    cout << "   " << sorgente.nome << " --> ADDRESS BUS" << endl;
-    cout << "   \"R\" ---> CONTROL BUS" << endl;
+    cout << "   " << sorgente.nome << " ---> AR" << endl;
+    cout << "   AR ---> ADDRESS BUS   , \"R\" ---> CONTROL BUS" << endl;
     cout << "=> RAM[ADDRESS BUS] --> DATA BUS" << endl;
-    cout << "   DATA BUS --> " << destinazione.nome << endl;
+    cout << "   DATA BUS --> DATA REGISTER " << endl;
     premi();
 
     sistema.data_bus = sistema.ram[sistema.address_bus];
     mostra_stato();
 
-    cout << "   " << sorgente.nome << " --> ADDRESS BUS" << endl;
-    cout << "   \"R\" ---> CONTROL BUS" << endl;
+    cout << "   " << sorgente.nome << " ---> AR" << endl;
+    cout << "   AR ---> ADDRESS BUS   , \"R\" ---> CONTROL BUS" << endl;
     cout << "   RAM[ADDRESS BUS] --> DATA BUS" << endl;
-    cout << "=> DATA BUS --> " << destinazione.nome << endl;
+    cout << "=> DATA BUS --> DATA REGISTER " << endl;
     premi();
 
-    sistema.ir.val = sistema.data_bus;
+    sistema.dr.val = sistema.data_bus;
 
     sistema.address_bus = -1;
     sistema.data_bus = -1;
     sistema.control_bus = ' ';
-
+    
     mostra_stato();
 }
 
@@ -130,7 +133,7 @@ void inizializza_set_istruzioni()
     set_istruzioni[12] = {12, "\t DEC A \n \n \t\tDecrementa il valore contenunto nel registro A", []()
                           {
                               cout << "=>  A - 1 --> A " << endl;
-                              sistema.a.val++;
+                              sistema.a.val--;
                           }};
     set_istruzioni[13] = {13, "\t INC B \n \n \t\tIncrementa il valore contenunto nel registro B", []()
                           {
@@ -143,14 +146,55 @@ void inizializza_set_istruzioni()
                               sistema.b.val--;
                           }};
     set_istruzioni[27] = {27, "\t ADD A , dato \n \n \t\t Addiziona ad A il valore in memoria che segue immediatamente  l'istruzione", []()
-                          { cout << "exe di 27"; }};
+                          {
+                              lettura_da_memoria(sistema.ip);
+                              cout << "   IP/PC +1 --> IP/PC ";
+                              premi();
+                              sistema.ip.val++;
+                              mostra_stato();
+
+                              cout << "=>  A + " << sistema.dr.val << " --> A " << endl;
+                              premi();
+                              sistema.a.val = sistema.a.val + sistema.dr.val;
+                          }};
+
     set_istruzioni[28] = {28, "\t ADD B , dato \n \n \t\t Addiziona a B il valore in memoria che segue immediatamente  l'istruzione", []()
-                          { cout << "exe di 28"; }};
+                          {
+                              lettura_da_memoria(sistema.ip);
+                              cout << "   IP/PC +1 --> IP/PC ";
+                              premi();
+                              sistema.ip.val++;
+                              mostra_stato();
+
+                              cout << "=>  B + " << sistema.dr.val << " --> B " << endl;
+                              premi();
+                              sistema.b.val = sistema.b.val + sistema.dr.val;
+                          }};
 
     set_istruzioni[23] = {23, "\t MOV A , dato \n \n \t\t Copia in A il valore in memoria che segue immediatamente  l'istruzione", []()
-                          { cout << "exe di 23"; }};
+                          {
+                              lettura_da_memoria(sistema.ip);
+                              cout << "   IP/PC +1 --> IP/PC ";
+                              premi();
+                              sistema.ip.val++;
+                              mostra_stato();
+
+                              cout << "=>    " << sistema.dr.val << " --> A " << endl;
+                              premi();
+                              sistema.a.val = sistema.dr.val;
+                          }};
     set_istruzioni[24] = {24, "\t MOV B , dato \n \n \t\t Copia in B il valore in memoria che segue immediatamente  l'istruzione", []()
-                          { cout << "exe di 24"; }};
+                          {
+                              lettura_da_memoria(sistema.ip);
+                              cout << "   IP/PC +1 --> IP/PC ";
+                              premi();
+                              sistema.ip.val++;
+                              mostra_stato();
+
+                              cout << "=>    " << sistema.dr.val << " --> B " << endl;
+                              premi();
+                              sistema.b.val = sistema.dr.val;
+                          }};
 }
 
 int main()
@@ -163,16 +207,20 @@ int main()
             sistema.fase = "FETCH";
             mostra_stato();
 
-            lettura_da_memoria(sistema.ip, sistema.ir);
+            lettura_da_memoria(sistema.ip);
+            mostra_stato();
+
+            cout << "=> DR --> IR" << endl;
+            premi();
+            sistema.ir.val = sistema.dr.val;
             mostra_stato();
 
             cout << "=> IP/PC +1 --> IP/PC" << endl;
             premi();
-
             sistema.ip.val++;
-
             mostra_stato();
         } // fine FETCH
+
         { // DECODE
             sistema.fase = "DECODE";
             mostra_stato();
@@ -200,9 +248,6 @@ int main()
             sistema.fase = "EXECUTE";
             mostra_stato();
             set_istruzioni[sistema.ir.val].esecuzione();
-            cout << endl
-                 << endl;
-            premi();
         }
     }
 }
