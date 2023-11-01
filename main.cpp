@@ -4,14 +4,20 @@
 #include <functional>
 using namespace std;
 
+struct Registro
+{
+    int val = 0;
+    string nome;
+};
+
 struct Sistema
 {
     int ram[9] = {11, 11, 12, 27, 3, 27, 11, 0, 0};
-    int a = 0;
-    int b = 0;
+    Registro a{0, "A"};
+    Registro b{0, "B"};
 
-    int ir = 0;
-    int ip = 0;
+    Registro ir{0, "IR"};
+    Registro ip{0, "IP/PC"};
 
     int address_bus = 0;
     int data_bus = 0;
@@ -32,21 +38,21 @@ void mostra_stato()
     system("clear");
     cout << " +------------- CPU -------------+                             +----RAM-----+" << endl;
     cout << " |     +--------------+          |  /|                     |\\  |     " << setw(2) << sistema.ram[0] << "     |   O" << endl;
-    cout << " |  A= |      " << setw(2) << sistema.a << "      |          | / +----DATA BUS --------+ \\ +------------+" << endl;
+    cout << " |  A= |      " << setw(2) << sistema.a.val << "      |          | / +----DATA BUS --------+ \\ +------------+" << endl;
     cout << " |     +--------------+          |/                           \\|     " << setw(2) << sistema.ram[1] << "     |   1" << endl;
     cout << " |                               |\\               " << setw(2) << (sistema.data_bus < 0 ? "" : to_string(sistema.data_bus)) << "          /+------------+" << endl;
     cout << " |     +--------------+          | \\ +---------------------+ / |     " << setw(2) << sistema.ram[2] << "     |   2" << endl;
-    cout << " |  B= |      " << setw(2) << sistema.b << "      |          |  \\|                     |/  +------------+" << endl;
+    cout << " |  B= |      " << setw(2) << sistema.b.val << "      |          |  \\|                     |/  +------------+" << endl;
     cout << " |     +--------------+          |                             |     " << setw(2) << sistema.ram[3] << "     |   3" << endl;
     cout << " |                               |                             +------------+" << endl;
     cout << " |     +--------------+          |                         |\\  |     " << setw(2) << sistema.ram[4] << "     |   4" << endl;
-    cout << " | IR= |      " << setw(2) << sistema.ir << "      |          |---- ADDRESS BUS --------+ \\ +------------+" << endl;
+    cout << " | IR= |      " << setw(2) << sistema.ir.val << "      |          |---- ADDRESS BUS --------+ \\ +------------+" << endl;
     cout << " |     +--------------+          |                            \\|     " << setw(2) << sistema.ram[5] << "     |   5" << endl;
     cout << " |                               |            " << setw(2) << (sistema.address_bus < 0 ? "" : to_string(sistema.address_bus)) << "               /+------------+" << endl;
     cout << " |                               |-------------------------+ / |     " << setw(2) << sistema.ram[6] << "     |   6" << endl;
     cout << " |                               |                         |/  +------------+" << endl;
     cout << " |        +--------------+       |                             |     " << setw(2) << sistema.ram[7] << "     |   7" << endl;
-    cout << " | IP/PC= |      " << setw(2) << sistema.ip << "      |       |---CONTROL BUS-----------\\   +------------+" << endl;
+    cout << " | IP/PC= |      " << setw(2) << sistema.ip.val << "      |       |---CONTROL BUS-----------\\   +------------+" << endl;
     cout << " |        +--------------+       |            " << sistema.control_bus << "             >  |     " << setw(2) << sistema.ram[8] << "     |   8" << endl;
     cout << " |                               |-------------------------/   +------------+" << endl;
     cout << " +-------------------------------+" << endl
@@ -74,22 +80,22 @@ void inizializza_set_istruzioni()
     set_istruzioni[11] = {11, "\t INC A \n \n \t\tIncrementa il valore contenunto nel registro A", []()
                           {
                               cout << "=>  A + 1 --> A " << endl;
-                              sistema.a++;
+                              sistema.a.val++;
                           }};
     set_istruzioni[12] = {12, "\t DEC A \n \n \t\tDecrementa il valore contenunto nel registro A", []()
                           {
                               cout << "=>  A - 1 --> A " << endl;
-                              sistema.a++;
+                              sistema.a.val++;
                           }};
     set_istruzioni[13] = {13, "\t INC B \n \n \t\tIncrementa il valore contenunto nel registro B", []()
                           {
                               cout << "=>  B + 1 --> A " << endl;
-                              sistema.a++;
+                              sistema.b.val++;
                           }};
     set_istruzioni[14] = {14, "\t DEC B \n \n \t\tDecrementa il valore contenunto nel registro B", []()
                           {
                               cout << "=>  B - 1 --> B " << endl;
-                              sistema.a++;
+                              sistema.b.val--;
                           }};
     set_istruzioni[27] = {27, "\t ADD A , dato \n \n \t\t Addiziona ad A il valore in memoria che segue immediatamente  l'istruzione", []()
                           { cout << "exe di 27"; }};
@@ -118,7 +124,7 @@ int main()
             cout << "   IP/PC +1 --> IP/PC" << endl;
             premi();
 
-            sistema.address_bus = sistema.ip;
+            sistema.address_bus = sistema.ip.val;
             mostra_stato();
 
             cout << "   IP/PC  --> ADDRESS BUS" << endl;
@@ -148,7 +154,7 @@ int main()
             cout << "   IP/PC +1 --> IP/PC" << endl;
             premi();
 
-            sistema.ir = sistema.data_bus;
+            sistema.ir.val = sistema.data_bus;
             sistema.address_bus = -1;
             sistema.data_bus = -1;
             sistema.control_bus = ' ';
@@ -162,7 +168,7 @@ int main()
             cout << "=> IP/PC +1 --> IP/PC" << endl;
             premi();
 
-            sistema.ip++;
+            sistema.ip.val++;
 
             mostra_stato();
         } // fine FETCH
@@ -170,10 +176,10 @@ int main()
             sistema.fase = "DECODE";
             mostra_stato();
             cout << endl
-                 << "codice operativo  " << sistema.ir << endl
+                 << "codice operativo  " << sistema.ir.val << endl
                  << endl;
 
-            if (set_istruzioni.find(sistema.ir) == set_istruzioni.end()) // TODO c++20 m.contains( k )
+            if (set_istruzioni.find(sistema.ir.val) == set_istruzioni.end()) // TODO c++20 m.contains( k )
             {
                 cout << "op_code non valido" << endl
                      << endl;
@@ -182,7 +188,7 @@ int main()
             }
             else
             {
-                cout << set_istruzioni[sistema.ir].decodifica << endl
+                cout << set_istruzioni[sistema.ir.val].decodifica << endl
                      << endl
                      << endl;
                 premi();
@@ -192,7 +198,7 @@ int main()
           // TODO assert(set_istruzioni.find(sistema.ir) != set_istruzioni.end()) come si usa?
             sistema.fase = "EXECUTE";
             mostra_stato();
-            set_istruzioni[sistema.ir].esecuzione();
+            set_istruzioni[sistema.ir.val].esecuzione();
             cout << endl
                  << endl;
             premi();
