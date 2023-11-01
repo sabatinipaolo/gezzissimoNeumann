@@ -16,7 +16,7 @@ struct Sistema
     Registro a{0, "A"};
     Registro b{0, "B"};
 
-    Registro mr{0, "MR"};
+    Registro ar{0, "AR"};
     Registro dr{0, "DR"};
 
     Registro ir{0, "IR"};
@@ -51,7 +51,7 @@ void mostra_stato()
     cout << " |                                      |                             +------------+" << endl;
     cout << " |  +- IR ---+                          |                         |\\  |     " << setw(2) << sistema.ram[4] << "     |   4" << endl;
     cout << " |  |    " << setw(2) << sistema.ir.val << "  |                 +- AR ---+---- ADDRESS BUS --------+ \\ +------------+" << endl;
-    cout << " |  +--------+                 |    " << setw(2) << sistema.mr.val << "  |                            \\|     " << setw(2) << sistema.ram[5] << "     |   5" << endl;
+    cout << " |  +--------+                 |    " << setw(2) << sistema.ar.val << "  |                            \\|     " << setw(2) << sistema.ram[5] << "     |   5" << endl;
     cout << " |                             +--------+            " << setw(2) << (sistema.address_bus < 0 ? "" : to_string(sistema.address_bus)) << "              /+------------+" << endl;
     cout << " |                                      |-------------------------+ / |     " << setw(2) << sistema.ram[6] << "     |   6" << endl;
     cout << " |                                      |                         |/  +------------+" << endl;
@@ -83,7 +83,7 @@ void lettura_da_memoria(Registro sorgente)
     cout << "   DATA BUS --> DATA REGISTER " << endl;
     premi();
 
-    sistema.mr.val = sorgente.val;
+    sistema.ar.val = sorgente.val;
     mostra_stato();
 
     cout << "   " << sorgente.nome << " ---> AR" << endl;
@@ -92,7 +92,7 @@ void lettura_da_memoria(Registro sorgente)
     cout << "   DATA BUS --> DATA REGISTER " << endl;
     premi();
 
-    sistema.address_bus = sistema.mr.val;
+    sistema.address_bus = sistema.ar.val;
     sistema.control_bus = 'R';
     mostra_stato();
 
