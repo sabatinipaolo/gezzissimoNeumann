@@ -19,8 +19,8 @@ struct Sistema
     Registro ir{0, "IR"};
     Registro ip{0, "IP/PC"};
 
-    int address_bus = 0;
-    int data_bus = 0;
+    int address_bus = -1;
+    int data_bus = -1;
     char control_bus = ' ';
     string fase = "FETCH";
 
